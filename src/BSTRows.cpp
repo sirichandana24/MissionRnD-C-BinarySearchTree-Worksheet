@@ -28,10 +28,44 @@ struct node{
 	int data;
 	struct node *right;
 };
-
-
-
+int get_height_of_bst(struct node*);
+void traversal(struct node*, int, int*, int*);
 int* BSTRighttoLeftRows(struct node* root)
 {
-    return NULL;
+	int height, i, index = 0, *arr;
+	arr = (int*)malloc(100 * sizeof(int));
+	if (root == NULL)
+		return NULL;
+	height = get_height_of_bst(root);
+	for (i = 1; i <= height; i++)
+		traversal(root, i, arr, &index);
+	return arr;
 }
+void traversal(struct node *root, int k, int *arr, int *index)
+{
+	if (root == NULL)
+		return;
+	if (k == 1)
+		arr[(*index)++] = root->data;
+	else if (k>1)
+	{
+		traversal(root->right, k - 1, arr, index);
+		traversal(root->left, k - 1, arr, index);
+	}
+}
+int get_height_of_bst(struct node *root){
+	int ld, rd;
+	if (root == NULL)
+		return 0;
+	else
+	{
+		ld = get_height_of_bst(root->left);
+		rd = get_height_of_bst(root->right);
+	}
+	if (ld > rd)
+		return ld + 1;
+	else
+		return rd + 1;
+}
+
+
