@@ -38,8 +38,67 @@ struct node{
   int data;
   struct node *right;
 };
-
+int distance_downwards(struct node*);
+struct node* get_parent(struct node*, int);
+int minimum(int, int);
 int get_closest_leaf_distance(struct node *root, struct node *temp)
 {
-  return -1;
+	if (root == NULL || temp == NULL)
+		return -1;
+	int d = distance_downwards(temp);
+	struct node *parent = get_parent(root, temp->data);
+	int d1 = get_closest_leaf_distance(root, parent);
+	if (d == d1)
+		return d1;
+	int m = minimum(d1, d);
+	if (m == d1)
+		return 1 + d1;
+	return d;
+}
+struct node* get_parent(struct node* root, int x)
+{
+	struct node *lnode = NULL, *rnode = NULL;
+	if (root == NULL)
+		return NULL;
+	if (root->left != NULL)
+		if (root->left->data == x)
+			return root;
+	if (root->right != NULL)
+		if (root->right->data == x)
+			return root;
+	if (root->left != NULL)
+		lnode = get_parent(root->left, x);
+	if (root->right != NULL)
+		rnode = get_parent(root->right, x);
+	if (lnode != NULL)
+		return lnode;
+	else
+		return rnode;
+}
+int distance_downwards(struct node *root)
+{
+	int ld, rd;
+	if (root == NULL)
+		return -1;
+	if (root->left == NULL && root->right == NULL)
+		return 0;
+	ld = distance_downwards(root->left);
+	rd = distance_downwards(root->right);
+	int m = minimum(ld, rd);
+	return m + 1;
+}
+int minimum(int x, int y)
+{
+	if (x != -1 && y != -1)
+		if (x > y)
+			return y;
+		else
+			return x;
+
+	if (x == -1){
+		return y;
+	}
+	if (y == -1){
+		return x;
+	}
 }
